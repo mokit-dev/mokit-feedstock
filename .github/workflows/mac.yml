@@ -15,7 +15,7 @@ jobs:
         with:
           auto-update-conda: true
           activate-environment: mokit-env
-          environment-file: recipe/recipe.yaml
+          environment-file: recipe/env.yaml
           python-version: 3.11
           architecture: arm64
       - name: Build the package
