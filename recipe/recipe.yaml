@@ -1,0 +1,48 @@
+#{% set data = load_setup_py_data() %} # do not remove this line
+# {% set data = load_file_data('pyproject.toml') %}
+# {% set proj = data['project'] %}
+# {% set urls = data['project']['urls'] %}
+
+context:
+  version: ${{ load_from_file('pyproject.toml').project.version }}
+  # urls: ${{ load_from_file('pyproject.toml').project.urls }}
+
+package:
+  name: "mokit"
+  version: ${{ version }}
+
+source:
+  - git: https://gitlab.com/jxzou/mokit
+    branch: "master"
+
+
+build:
+  number: 16
+  # string: "py{{ PY_VER }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}"
+
+requirements:
+  build:
+    - make
+    - ${{ compiler('fortran') }}
+    - python 
+    #- setuptools <=73
+    - numpy 
+    #- blas=*=*openblas
+    - openblas 
+    # - libgfortran5
+    # - libgomp
+    # - sysroot_linux-64 2.17
+  run:
+    - python 
+    - openblas 
+    - numpy 
+    # - libgfortran5
+    # - libgomp
+
+# about:
+#   home:            "{{ urls['Homepage'] }}"
+#   license:         "Apache-2.0"
+#   summary:         "{{ proj['description'] }}"
+#   description:     "MOKIT offers various utilities and modules to transfer MOs among various quantum chemistry software packages.\nBesides, the automr program in MOKIT can set up and run common multi-reference calculations in a black-box way."
+#   dev_url:         "{{ urls['Repository'] }}"
+#   doc_url:         "{{ urls['Documentation'] }}"

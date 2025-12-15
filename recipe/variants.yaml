@@ -1,0 +1,9 @@
+python:
+  #- 3.10
+  - 3.11
+numpy:
+  - 2.2
+openblas:
+  - 0.3.29
+c_stdlib_version:
+  - 11.0 # osx arm64
