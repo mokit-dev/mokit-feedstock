@@ -27,7 +27,6 @@ jobs:
           conda activate mokit-env
           wget "https://gitlab.com/jxzou/mokit/-/raw/master/pyproject.toml"
           rattler-build build --recipe recipe --output-dir output -c conda-forge --experimental
-          rattler
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
