@@ -33,12 +33,12 @@ requirements:
     - llvm-openmp
     # - sysroot_linux-64 2.17
   host:
+    - python
     - numpy
     - openblas
     - llvm-openmp
   run:
-    - python 
-    - openblas 
+    - python
     - numpy 
     # - libgfortran5
     # - libgomp

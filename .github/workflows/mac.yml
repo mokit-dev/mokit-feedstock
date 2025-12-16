@@ -27,7 +27,14 @@ jobs:
           conda activate mokit-env
           wget "https://gitlab.com/jxzou/mokit/-/raw/master/pyproject.toml"
           rattler-build build --recipe recipe --output-dir output -c conda-forge --experimental
+          rattler
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: mokit-osx-arm64
+          path: output/*/*.conda
+      - name: Upload to Anaconda.org
+        env:
+          ANACONDA_API_KEY: ${{ secrets.ANACONDA }}
+        run: |
+          rattler-build upload anaconda -o mokit -c cf ./output/*/*.conda
