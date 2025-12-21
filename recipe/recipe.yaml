@@ -5,7 +5,10 @@
 
 context:
   version: ${{ load_from_file('pyproject.toml').project.version }}
-  # urls: ${{ load_from_file('pyproject.toml').project.urls }}
+  home: ${{ load_from_file('pyproject.toml').project.urls.Homepage }}
+  summary: ${{ load_from_file('pyproject.toml').project.description }}
+  dev_url: ${{ load_from_file('pyproject.toml').project.urls.Repository }}
+  doc_url: ${{ load_from_file('pyproject.toml').project.urls.Documentation }}
 
 package:
   name: "mokit"
@@ -17,8 +20,11 @@ source:
 
 
 build:
-  number: 16
+  number: 20
   # string: "py{{ PY_VER }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}"
+  files:
+    exclude:
+      - "**/__pycache__"
 
 requirements:
   build:
@@ -43,10 +49,10 @@ requirements:
     # - libgfortran5
     # - libgomp
 
-# about:
-#   home:            "{{ urls['Homepage'] }}"
-#   license:         "Apache-2.0"
-#   summary:         "{{ proj['description'] }}"
-#   description:     "MOKIT offers various utilities and modules to transfer MOs among various quantum chemistry software packages.\nBesides, the automr program in MOKIT can set up and run common multi-reference calculations in a black-box way."
-#   dev_url:         "{{ urls['Repository'] }}"
-#   doc_url:         "{{ urls['Documentation'] }}"
+about:
+  homepage:            ${{ home }}
+  license:         "Apache-2.0"
+  summary:         ${{ summary }}
+  description:     "MOKIT offers various utilities and modules to transfer MOs among various quantum chemistry software packages.\nBesides, the automr program in MOKIT can set up and run common multi-reference calculations in a black-box way."
+  repository:         ${{ dev_url }}
+  documentation:         ${{ doc_url }}
