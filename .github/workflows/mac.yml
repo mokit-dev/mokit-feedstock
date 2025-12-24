@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - master
+    paths:
+      - "recipe/*"
 
 jobs:
   build-osx-arm64:
@@ -36,4 +38,4 @@ jobs:
         env:
           ANACONDA_API_KEY: ${{ secrets.ANACONDA }}
         run: |
-          rattler-build upload anaconda -o mokit -c cf ./output/*/*.conda
+          rattler-build upload anaconda -o mokit ./output/*/*.conda
