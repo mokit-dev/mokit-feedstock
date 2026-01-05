@@ -16,12 +16,12 @@ package:
 
 source:
   - git: https://gitlab.com/jxzou/mokit
-    rev: 72c54d588e65fc4aea8ab8f695dd7fff5e6843c0
+    rev: e35f83a51d02d8c0e73a8f859877ed7474c6d6b3
     #branch: "master"
 
 
 build:
-  number: 20
+  number: 23
   # string: "py{{ PY_VER }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}"
   files:
     exclude:
