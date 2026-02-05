@@ -35,3 +35,8 @@ jobs:
         with:
           name: mokit-win-64
           path: output/*/*.conda
+      - name: Upload to Anaconda.org
+        env:
+          ANACONDA_API_KEY: ${{ secrets.ANACONDA }}
+        run: |
+          rattler-build upload anaconda -o mokit ./output/*/*.conda
