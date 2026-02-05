@@ -32,7 +32,7 @@ requirements:
     - if: unix
       then: make
     - if: win
-      then: m2w64-make
+      then: make
     - ${{ compiler('fortran') }}
     - python 
     #- setuptools <=73
