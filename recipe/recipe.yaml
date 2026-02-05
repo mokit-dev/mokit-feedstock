@@ -29,7 +29,10 @@ build:
 
 requirements:
   build:
-    - make
+    - if: unix
+      then: make
+    - if: win
+      then: m2w64-make
     - ${{ compiler('fortran') }}
     - python 
     #- setuptools <=73
@@ -37,13 +40,15 @@ requirements:
     #- blas=*=*openblas
     - openblas 
     # - libgfortran5
-    - llvm-openmp
+    - if: osx
+      then: llvm-openmp
     # - sysroot_linux-64 2.17
   host:
     - python
     - numpy
     - openblas
-    - llvm-openmp
+    - if: osx
+      then: llvm-openmp
   run:
     - python
     - numpy 

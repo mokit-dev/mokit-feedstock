@@ -1,0 +1,37 @@
+name: Build on Windows
+
+on:
+  push:
+    branches:
+      - master
+      - windows
+    paths:
+      - "recipe/*"
+      - ".github/workflows/windows.yml"
+
+jobs:
+  build-win-64:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: cmd /C "CALL {0}"
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Miniconda
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          auto-update-conda: true
+          activate-environment: mokit-env
+          environment-file: recipe/env.yaml
+          python-version: 3.11
+      - name: Build the package
+        run: |
+          conda info
+          conda activate mokit-env
+          powershell -Command "Invoke-WebRequest -Uri https://gitlab.com/jxzou/mokit/-/raw/master/pyproject.toml -OutFile pyproject.toml"
+          rattler-build build --recipe recipe --output-dir output -c conda-forge --experimental
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mokit-win-64
+          path: output/*/*.conda
