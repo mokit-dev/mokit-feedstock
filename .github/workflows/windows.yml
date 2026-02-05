@@ -27,7 +27,7 @@ jobs:
       - name: Build the package
         run: |
           conda info
-          conda activate mokit-env
+          call conda.bat activate mokit-env
           powershell -Command "Invoke-WebRequest -Uri https://gitlab.com/jxzou/mokit/-/raw/master/pyproject.toml -OutFile pyproject.toml"
           rattler-build build --recipe recipe --output-dir output -c conda-forge --experimental
       - name: Upload artifact
