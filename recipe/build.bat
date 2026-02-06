@@ -10,18 +10,26 @@ echo CXX=%CXX%
 echo MAKE=%MAKE%
 echo BUILD_PREFIX=%BUILD_PREFIX%
 echo PREFIX=%PREFIX%
+echo CONDA_PREFIX=%CONDA_PREFIX%
+for /f "delims=" %%F in ('where objdump 2^>NUL') do set OBJDUMP=%%F
 where f2py
-set PATH=%BUILD_PREFIX%\Library\bin;%BUILD_PREFIX%\bin;%PATH%
+set PATH=%BUILD_PREFIX%\Library\bin;%BUILD_PREFIX%\bin;%SYSTEMROOT%\System32;%SYSTEMROOT%;%SYSTEMROOT%\System32\Wbem
 echo PATH=%PATH%
 where x86_64-w64-mingw32-gfortran.exe
 where libgfortran-*.dll
 where libgcc_s_seh-1.dll
 where libwinpthread-1.dll
+where libquadmath-0.dll
+where libgomp-1.dll
+dir /b "%PREFIX%\Library\bin\libgfortran*.dll" 2>NUL
+dir /b "%PREFIX%\Library\bin\libgcc_s_seh-1.dll" 2>NUL
+dir /b "%PREFIX%\Library\bin\libwinpthread-1.dll" 2>NUL
 dir /b "%BUILD_PREFIX%\Library\bin\libgfortran*.dll" 2>NUL
 dir /b "%BUILD_PREFIX%\Library\bin\libgcc_s_seh-1.dll" 2>NUL
 dir /b "%BUILD_PREFIX%\Library\bin\libwinpthread-1.dll" 2>NUL
-where dumpbin && set HAVE_DUMPBIN=1
-where objdump && set HAVE_OBJDUMP=1
+dir /b "%BUILD_PREFIX%\Library\bin\libquadmath-0.dll" 2>NUL
+dir /b "%BUILD_PREFIX%\Library\bin\libgomp-1.dll" 2>NUL
+if not "x%OBJDUMP%"=="x" %OBJDUMP% -p "%BUILD_PREFIX%\Library\bin\libgfortran-5.dll" | findstr DLL
 %PYTHON% -m numpy.f2py -h >NUL 2>&1
 
 set F90=%FC%
@@ -40,8 +48,9 @@ if not %BUILD_ERROR%==0 (
   echo Searching for sanitycheckf.exe in %TEMP%
   for /f "delims=" %%F in ('dir /s /b "%TEMP%\sanitycheckf.exe" 2^>NUL') do (
     echo --- %%F
-    if not "x%HAVE_DUMPBIN%"=="x" dumpbin /dependents "%%F"
-    if "x%HAVE_DUMPBIN%"=="x" if not "x%HAVE_OBJDUMP%"=="x" objdump -p "%%F" | findstr DLL
+    "%%F"
+    echo sanitycheckf.exe exit=%%ERRORLEVEL%%
+    if not "x%OBJDUMP%"=="x" %OBJDUMP% -p "%%F" | findstr DLL
   )
   exit /b %BUILD_ERROR%
 )
