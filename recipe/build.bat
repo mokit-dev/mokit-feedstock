@@ -13,7 +13,6 @@ echo PREFIX=%PREFIX%
 echo CONDA_PREFIX=%CONDA_PREFIX%
 for /f "delims=" %%F in ('where objdump 2^>NUL') do set OBJDUMP=%%F
 where f2py
-set PATH=%BUILD_PREFIX%\Library\bin;%BUILD_PREFIX%\bin;%SYSTEMROOT%\System32;%SYSTEMROOT%;%SYSTEMROOT%\System32\Wbem
 echo PATH=%PATH%
 where x86_64-w64-mingw32-gfortran.exe
 where libgfortran-*.dll
