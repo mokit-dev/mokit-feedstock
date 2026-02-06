@@ -35,6 +35,7 @@ requirements:
       then: make
     - ${{ compiler('fortran') }}
     - python 
+    - pip
     #- setuptools <=73
     - numpy 
     #- blas=*=*openblas
@@ -45,6 +46,7 @@ requirements:
     # - sysroot_linux-64 2.17
   host:
     - python
+    - pip
     - numpy
     - openblas
     - if: osx
