@@ -28,6 +28,14 @@ jobs:
         run: |
           conda info
           conda activate mokit-env
+          Write-Host "FC=$env:FC"
+          Write-Host "F77=$env:F77"
+          Write-Host "F90=$env:F90"
+          Write-Host "CC=$env:CC"
+          Write-Host "CXX=$env:CXX"
+          Write-Host "MAKE=$env:MAKE"
+          Write-Host "BUILD_PREFIX=$env:BUILD_PREFIX"
+          Write-Host "PREFIX=$env:PREFIX"
           Invoke-WebRequest -Uri "https://gitlab.com/jxzou/mokit/-/raw/master/pyproject.toml" -OutFile pyproject.toml
           rattler-build build --recipe recipe --output-dir output -c conda-forge --experimental
       - name: Upload artifact
