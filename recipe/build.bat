@@ -16,7 +16,9 @@ where f2py
 set F90=%FC%
 set F77=%FC%
 copy /Y "%RECIPE_DIR%\Makefile.gnu_openblas_conda.win" Makefile.gnu_openblas_conda.win
+powershell -Command "$content = Get-Content Makefile.main; $content = $content | ForEach-Object { if ($_ -match '^\s*@mv .*\.so') { $_ -replace '\.so', '.pyd' } else { $_ } }; Set-Content Makefile.main $content"
 make all -f Makefile.gnu_openblas_conda.win
+dir /b *.pyd *.so 2>NUL
 if errorlevel 1 exit /b %errorlevel%
 
 cd ..
