@@ -10,6 +10,7 @@ echo CXX=%CXX%
 echo MAKE=%MAKE%
 echo BUILD_PREFIX=%BUILD_PREFIX%
 echo PREFIX=%PREFIX%
+where f2py
 %PYTHON% -m numpy.f2py -h >NUL 2>&1
 
 set F90=%FC%

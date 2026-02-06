@@ -35,6 +35,8 @@ requirements:
       then: make
     - ${{ compiler('fortran') }}
     - python 
+    - if: win
+      then: setuptools <=73
     - pip
     #- setuptools <=73
     - numpy 
