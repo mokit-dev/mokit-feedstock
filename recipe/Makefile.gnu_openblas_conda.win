@@ -1,0 +1,12 @@
+# Windows-specific variant of Makefile.gnu_openblas_conda
+
+BIN = ../bin
+LIB = ../mokit/lib
+
+# --- gfortran + openblas ---
+FFLAGS += -O2 -cpp -fPIC -fopenmp -fno-tree-vectorize -fno-math-errno
+MKL_FLAGS = -L$(BUILD_PREFIX)/Library/lib -lopenblas
+F2PY = f2py
+F2_FLAGS = --f90flags="-cpp -fopenmp -fno-tree-vectorize -fno-math-errno" -I$(PWD) -lgomp
+
+include Makefile.main

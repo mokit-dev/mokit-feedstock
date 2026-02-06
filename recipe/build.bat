@@ -14,7 +14,8 @@ echo PREFIX=%PREFIX%
 
 set F90=%FC%
 set F77=%FC%
-make all -f Makefile.gnu_openblas_conda
+copy /Y "%RECIPE_DIR%\Makefile.gnu_openblas_conda.win" Makefile.gnu_openblas_conda.win
+make all -f Makefile.gnu_openblas_conda.win
 
 cd ..
 %PYTHON% -m pip install -v --prefix=%PREFIX% .
