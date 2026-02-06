@@ -12,7 +12,7 @@ echo BUILD_PREFIX=%BUILD_PREFIX%
 echo PREFIX=%PREFIX%
 %PYTHON% -m numpy.f2py -h >NUL 2>&1
 
-make all -f Makefile.gnu_openblas_conda
+F90=%FC% make all -f Makefile.gnu_openblas_conda 
 
 cd ..
 %PYTHON% -m pip install -v --prefix=%PREFIX% .
