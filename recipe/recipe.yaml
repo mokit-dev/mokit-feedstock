@@ -37,6 +37,10 @@ requirements:
     - python 
     - if: win
       then: setuptools <=73
+    - if: win
+      then: meson
+    - if: win
+      then: ninja
     - pip
     #- setuptools <=73
     - numpy 

@@ -15,6 +15,7 @@ where f2py
 
 set F90=%FC%
 set F77=%FC%
+set PYTHON=%PYTHON%
 copy /Y "%RECIPE_DIR%\Makefile.gnu_openblas_conda.win" Makefile.gnu_openblas_conda.win
 make all -f Makefile.gnu_openblas_conda.win
 
