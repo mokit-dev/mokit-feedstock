@@ -41,6 +41,8 @@ requirements:
       then: meson
     - if: win
       then: ninja
+    - if: win
+      then: m2w64-gcc-libs
     - pip
     #- setuptools <=73
     - numpy 
@@ -60,6 +62,8 @@ requirements:
   run:
     - python
     - numpy 
+    - if: win
+      then: m2w64-gcc-libs
     # - libgfortran5
     # - libgomp
 
