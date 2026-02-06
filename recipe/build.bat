@@ -15,12 +15,13 @@ where f2py
 
 set F90=%FC%
 set F77=%FC%
-set PYTHON=%PYTHON%
 copy /Y "%RECIPE_DIR%\Makefile.gnu_openblas_conda.win" Makefile.gnu_openblas_conda.win
 make all -f Makefile.gnu_openblas_conda.win
+if errorlevel 1 exit /b %errorlevel%
 
 cd ..
 %PYTHON% -m pip install -v --prefix=%PREFIX% .
+if errorlevel 1 exit /b %errorlevel%
 
 if exist bin (
   if not exist %PREFIX%\bin mkdir %PREFIX%\bin
