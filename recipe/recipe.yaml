@@ -72,6 +72,8 @@ requirements:
       then: numpy >=2.4
     - if: unix
       then: numpy >=2.3,<3
+    - if: win
+      then: openblas
 
 about:
   homepage:            ${{ home }}
