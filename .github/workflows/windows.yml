@@ -28,7 +28,11 @@ jobs:
         run: |
           conda info
           conda activate mokit-env
-          Invoke-WebRequest -Uri "https://gitlab.com/jxzou/mokit/-/raw/master/pyproject.toml" -OutFile pyproject.toml
+          $revLine = Get-Content "recipe/recipe.yaml" | Select-String -Pattern '^\s*rev:\s*' | Select-Object -First 1
+          if (-not $revLine) { throw "Could not find source rev in recipe/recipe.yaml" }
+          $rev = ($revLine -replace '^\s*rev:\s*', '').Trim()
+          if (-not $rev) { throw "Source rev is empty in recipe/recipe.yaml" }
+          Invoke-WebRequest -Uri "https://gitlab.com/jxzou/mokit/-/raw/$rev/pyproject.toml" -OutFile pyproject.toml
           rattler-build build --recipe recipe --output-dir output -c conda-forge --experimental
       - name: Upload artifact
         uses: actions/upload-artifact@v4
