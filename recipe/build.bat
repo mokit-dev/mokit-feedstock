@@ -41,14 +41,14 @@ copy /Y "%RECIPE_DIR%\Makefile.gnu_openblas_conda.win" Makefile.gnu_openblas_con
 powershell -Command "$content = Get-Content Makefile.main; $content = $content -replace '\$\(F90\) -shared \$\(FFLAGS\) \$\(MKL_FLAGS\) -o librest2fch\.so \$\(OBJ_py2fch\)', '\$(F90) -shared \$(FFLAGS) -o librest2fch.so \$(OBJ_py2fch) \$(MKL_FLAGS)'; $content = $content -replace 'librest2fch\.so', 'librest2fch.dll'; $content = $content -replace '\.so', '.pyd'; $content = $content -replace '@mv ', '@move '; Set-Content Makefile.main $content"
 
 make all -f Makefile.gnu_openblas_conda.win
-@REM set BUILD_ERROR=%ERRORLEVEL%
-@REM if not %BUILD_ERROR%==0 (
-@REM   echo Make failed with %BUILD_ERROR%
-@REM   echo Searching for meson logs in %TEMP%
-@REM   for /f "delims=" %%F in ('dir /s /b "%TEMP%\meson-log.txt" 2^>NUL') do (
-@REM     echo --- %%F
-@REM     type "%%F"
-@REM   )
+set BUILD_ERROR=%ERRORLEVEL%
+if not %BUILD_ERROR%==0 (
+  echo Make failed with %BUILD_ERROR%
+  echo Searching for meson logs 
+  for /f "delims=" %%F in ('dir /s /b "%SRC_DIR%\src\f2pytmp\bbdir\meson-logs\meson-log.txt" 2^>NUL') do (
+    echo --- %%F
+    type "%%F"
+  )
 @REM   echo Searching for sanitycheckf.exe in %TEMP%
 @REM   for /f "delims=" %%F in ('dir /s /b "%TEMP%\sanitycheckf.exe" 2^>NUL') do (
 @REM     echo --- %%F
