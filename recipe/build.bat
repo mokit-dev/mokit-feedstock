@@ -38,7 +38,14 @@ if exist "..\MANIFEST.in" (
 
 set F90=%FC%
 set F77=%FC%
-set MESON_ARGS=--cross-file "%RECIPE_DIR%\meson.cross.ini"
+set MESON_CROSS_DIR=%USERPROFILE%\.local\share\meson\cross
+set MESON_CROSS_FILE=%MESON_CROSS_DIR%\skip_sanity.ini
+if not exist "%MESON_CROSS_DIR%" mkdir "%MESON_CROSS_DIR%"
+(
+  echo [properties]
+  echo skip_sanity_check = true
+) > "%MESON_CROSS_FILE%"
+set MESON_CROSS_FILE=%MESON_CROSS_FILE%
 copy /Y "%RECIPE_DIR%\Makefile.gnu_openblas_conda.win" Makefile.gnu_openblas_conda.win
 powershell -Command "$content = Get-Content Makefile.main; $content = $content -replace '\$\(F90\) -shared \$\(FFLAGS\) \$\(MKL_FLAGS\) -o librest2fch\.so \$\(OBJ_py2fch\)', '\$(F90) -shared \$(FFLAGS) -o librest2fch.so \$(OBJ_py2fch) \$(MKL_FLAGS)'; $content = $content -replace 'librest2fch\.so', 'librest2fch.dll'; $content = $content -replace '\.so', '.pyd'; $content = $content -replace '@mv ', '@move '; Set-Content Makefile.main $content"
 
