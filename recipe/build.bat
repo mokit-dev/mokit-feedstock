@@ -37,6 +37,7 @@ if exist "..\MANIFEST.in" (
 
 set F90=%FC%
 set F77=%FC%
+set MESON_ARGS=--native-file "%RECIPE_DIR%\meson.native.ini"
 copy /Y "%RECIPE_DIR%\Makefile.gnu_openblas_conda.win" Makefile.gnu_openblas_conda.win
 powershell -Command "$content = Get-Content Makefile.main; $content = $content -replace '\$\(F90\) -shared \$\(FFLAGS\) \$\(MKL_FLAGS\) -o librest2fch\.so \$\(OBJ_py2fch\)', '\$(F90) -shared \$(FFLAGS) -o librest2fch.so \$(OBJ_py2fch) \$(MKL_FLAGS)'; $content = $content -replace 'librest2fch\.so', 'librest2fch.dll'; $content = $content -replace '\.so', '.pyd'; $content = $content -replace '@mv ', '@move '; Set-Content Makefile.main $content"
 
