@@ -11,7 +11,7 @@ echo MAKE=%MAKE%
 echo BUILD_PREFIX=%BUILD_PREFIX%
 echo PREFIX=%PREFIX%
 echo CONDA_PREFIX=%CONDA_PREFIX%
-set PATH=%BUILD_PREFIX%\Library\bin;%BUILD_PREFIX%\bin;%SYSTEMROOT%\System32;%SYSTEMROOT%;%SYSTEMROOT%\System32\Wbem;%PATH%
+@REM set PATH=%BUILD_PREFIX%\Library\bin;%BUILD_PREFIX%\bin;%SYSTEMROOT%\System32;%SYSTEMROOT%;%SYSTEMROOT%\System32\Wbem;%PATH%
 @REM for /f "delims=" %%F in ('where objdump 2^>NUL') do set OBJDUMP=%%F
 @REM where f2py
 @REM echo PATH=%PATH%
@@ -38,18 +38,18 @@ if exist "..\MANIFEST.in" (
 
 set F90=%FC%
 set F77=%FC%
-set MESON_CROSS_DIR=%USERPROFILE%\.local\share\meson\cross
-set MESON_CROSS_FILE=%MESON_CROSS_DIR%\skip_sanity.ini
-if not exist "%MESON_CROSS_DIR%" mkdir "%MESON_CROSS_DIR%"
-(
-  echo [properties]
-  echo skip_sanity_check = true
-) > "%MESON_CROSS_FILE%"
-set MESON_CROSS_FILE=%MESON_CROSS_FILE%
+@REM set MESON_CROSS_DIR=%USERPROFILE%\.local\share\meson\cross
+@REM set MESON_CROSS_FILE=%MESON_CROSS_DIR%\skip_sanity.ini
+@REM if not exist "%MESON_CROSS_DIR%" mkdir "%MESON_CROSS_DIR%"
+@REM (
+@REM   echo [properties]
+@REM   echo skip_sanity_check = true
+@REM ) > "%MESON_CROSS_FILE%"
+@REM set MESON_CROSS_FILE=%MESON_CROSS_FILE%
 copy /Y "%RECIPE_DIR%\Makefile.gnu_openblas_conda.win" Makefile.gnu_openblas_conda.win
 powershell -Command "$content = Get-Content Makefile.main; $content = $content -replace '\$\(F90\) -shared \$\(FFLAGS\) \$\(MKL_FLAGS\) -o librest2fch\.so \$\(OBJ_py2fch\)', '\$(F90) -shared \$(FFLAGS) -o librest2fch.so \$(OBJ_py2fch) \$(MKL_FLAGS)'; $content = $content -replace 'librest2fch\.so', 'librest2fch.dll'; $content = $content -replace '\.so', '.pyd'; $content = $content -replace '@mv ', '@move '; Set-Content Makefile.main $content"
 
-make all -f Makefile.gnu_openblas_conda.win
+make exe -f Makefile.gnu_openblas_conda.win
 set BUILD_ERROR=%ERRORLEVEL%
 if not %BUILD_ERROR%==0 (
   echo Make failed with %BUILD_ERROR%
