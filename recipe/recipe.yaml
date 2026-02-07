@@ -34,6 +34,8 @@ requirements:
     - if: win
       then: make
     - ${{ compiler('fortran') }}
+    - if: win
+      then: gcc_win-64
     - python 
     - if: win
       then: setuptools <=73
@@ -42,10 +44,12 @@ requirements:
     - if: win
       then: ninja
     - pip
-    #- setuptools <=73
-    - numpy 
-    #- blas=*=*openblas
-    - openblas 
+    - if: win
+      then: numpy 2.4.*
+    - if: unix
+      then: numpy 2.3.*
+    - blas * *openblas
+    - openblas
     # - libgfortran5
     - if: osx
       then: llvm-openmp
@@ -53,15 +57,20 @@ requirements:
   host:
     - python
     - pip
-    - numpy
+    - if: win
+      then: numpy 2.4.*
+    - if: unix
+      then: numpy 2.3.*
+    - blas * *openblas
     - openblas
     - if: osx
       then: llvm-openmp
   run:
     - python
-    - numpy 
-    # - libgfortran5
-    # - libgomp
+    - if: win
+      then: numpy >=2.4
+    - if: unix
+      then: numpy >=2.3,<3
 
 about:
   homepage:            ${{ home }}
