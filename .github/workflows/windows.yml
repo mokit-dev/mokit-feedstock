@@ -39,4 +39,6 @@ jobs:
         env:
           ANACONDA_API_KEY: ${{ secrets.ANACONDA }}
         run: |
-          rattler-build upload anaconda -o mokit ./output/*/*.conda
+          $packages = Get-ChildItem -Path output -Filter *.conda -Recurse
+          if (-not $packages) { throw "No .conda packages found under output/" }
+          $packages | ForEach-Object { rattler-build upload anaconda -o mokit $_.FullName }

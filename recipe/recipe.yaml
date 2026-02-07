@@ -26,6 +26,7 @@ build:
   files:
     exclude:
       - "**/__pycache__"
+      - "**/*.pyc"
 
 requirements:
   build:
