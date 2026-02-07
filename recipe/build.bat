@@ -11,6 +11,7 @@ echo MAKE=%MAKE%
 echo BUILD_PREFIX=%BUILD_PREFIX%
 echo PREFIX=%PREFIX%
 echo CONDA_PREFIX=%CONDA_PREFIX%
+set PATH=%BUILD_PREFIX%\Library\bin;%BUILD_PREFIX%\bin;%SYSTEMROOT%\System32;%SYSTEMROOT%;%SYSTEMROOT%\System32\Wbem;%PATH%
 @REM for /f "delims=" %%F in ('where objdump 2^>NUL') do set OBJDUMP=%%F
 @REM where f2py
 @REM echo PATH=%PATH%
@@ -42,23 +43,16 @@ copy /Y "%RECIPE_DIR%\Makefile.gnu_openblas_conda.win" Makefile.gnu_openblas_con
 powershell -Command "$content = Get-Content Makefile.main; $content = $content -replace '\$\(F90\) -shared \$\(FFLAGS\) \$\(MKL_FLAGS\) -o librest2fch\.so \$\(OBJ_py2fch\)', '\$(F90) -shared \$(FFLAGS) -o librest2fch.so \$(OBJ_py2fch) \$(MKL_FLAGS)'; $content = $content -replace 'librest2fch\.so', 'librest2fch.dll'; $content = $content -replace '\.so', '.pyd'; $content = $content -replace '@mv ', '@move '; Set-Content Makefile.main $content"
 
 make all -f Makefile.gnu_openblas_conda.win
-@REM if not %BUILD_ERROR%==0 (
-@REM echo Make failed with %BUILD_ERROR%
-  echo Searching for meson logs 
+set BUILD_ERROR=%ERRORLEVEL%
+if not %BUILD_ERROR%==0 (
+  echo Make failed with %BUILD_ERROR%
+  echo Searching for meson logs
   for /f "delims=" %%F in ('dir /s /b "%SRC_DIR%\src\f2pytmp\bbdir\meson-logs\meson-log.txt" 2^>NUL') do (
     echo --- %%F
     type "%%F"
-@REM )
-set BUILD_ERROR=%ERRORLEVEL%
-@REM   echo Searching for sanitycheckf.exe in %TEMP%
-@REM   for /f "delims=" %%F in ('dir /s /b "%TEMP%\sanitycheckf.exe" 2^>NUL') do (
-@REM     echo --- %%F
-@REM     "%%F"
-@REM     echo sanitycheckf.exe exit=%%ERRORLEVEL%%
-@REM     if not "x%OBJDUMP%"=="x" %OBJDUMP% -p "%%F" | findstr DLL
-@REM   )
-@REM   exit /b %BUILD_ERROR%
-@REM )
+  )
+  exit /b %BUILD_ERROR%
+)
 dir /b *.pyd *.so 2>NUL
 
 cd ..
