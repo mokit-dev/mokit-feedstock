@@ -4,7 +4,7 @@ BIN = ../bin
 LIB = ../mokit/lib
 
 # --- gfortran + openblas ---
-FFLAGS += -O2 -cpp -fPIC -fopenmp -fno-tree-vectorize -fno-math-errno
+FFLAGS += -O2 -cpp -fPIC -fopenmp -fno-tree-vectorize -fno-math-errno -D_WIN32
 MKL_FLAGS = -L$(BUILD_PREFIX)/Library/lib -lopenblas
 F2PY = python -m numpy.f2py --backend=meson --verbose
 F2_FLAGS = --f90flags="-cpp -fopenmp -fno-tree-vectorize -fno-math-errno" -I$(SRC_DIR)/src -I$(PWD) -lgomp --build-dir f2pytmp
