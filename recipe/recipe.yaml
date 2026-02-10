@@ -37,6 +37,8 @@ requirements:
     - ${{ compiler('fortran') }}
     - if: win
       then: gcc_win-64
+    - if: unix
+      then: ${{ compiler('c') }}
     - python 
     - if: win
       then: setuptools <=73
