@@ -16,39 +16,64 @@ package:
 
 source:
   - git: https://gitlab.com/jxzou/mokit
-    rev: 9769e2264f0671ff84fd42183c38ab8f324d26f6
+    rev: c62fa039f911eb24f14043400aea8906d25f6924
     #branch: "master"
 
 
 build:
-  number: 3
+  number: 1
   # string: "py{{ PY_VER }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}"
   files:
     exclude:
       - "**/__pycache__"
+      - "**/*.pyc"
 
 requirements:
   build:
-    - make
+    - if: unix
+      then: make
+    - if: win
+      then: make
     - ${{ compiler('fortran') }}
+    - if: win
+      then: gcc_win-64
     - python 
-    #- setuptools <=73
-    - numpy 
-    #- blas=*=*openblas
-    - openblas 
+    - if: win
+      then: setuptools <=73
+    - if: win
+      then: meson
+    - if: win
+      then: ninja
+    - pip
+    - if: win
+      then: numpy 2.4.*
+    - if: unix
+      then: numpy 2.3.*
+    - blas * *openblas
+    - openblas
     # - libgfortran5
-    - llvm-openmp
+    - if: osx
+      then: llvm-openmp
     # - sysroot_linux-64 2.17
   host:
     - python
-    - numpy
+    - pip
+    - if: win
+      then: numpy 2.4.*
+    - if: unix
+      then: numpy 2.3.*
+    - blas * *openblas
     - openblas
-    - llvm-openmp
+    - if: osx
+      then: llvm-openmp
   run:
     - python
-    - numpy 
-    # - libgfortran5
-    # - libgomp
+    - if: win
+      then: numpy >=2.4
+    - if: unix
+      then: numpy >=2.3,<3
+    - if: win
+      then: openblas
 
 about:
   homepage:            ${{ home }}
