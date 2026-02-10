@@ -32,27 +32,27 @@ requirements:
   build:
     - make
     - ${{ compiler('fortran') }}
-    #- ${{ compiler('c') }}
+    - gcc_win-64
     - python 
-    #- pip
-    - numpy 
-    #- blas * *openblas
+    - setuptools <=73
+    - meson
+    - ninja
+    - pip
+    - numpy 2.4.*
+    - blas * *openblas
     - openblas
     # - libgfortran5
-    - if: osx
-      then: llvm-openmp
     # - sysroot_linux-64 2.17
   host:
     - python
-    #- pip
-    - numpy 
-    #- blas * *openblas
+    - pip
+    - numpy 2.4.*
+    - blas * *openblas
     - openblas
-    - if: osx
-      then: llvm-openmp
   run:
     - python
-    - numpy 
+    - numpy >=2.4
+    - openblas
 
 about:
   homepage:            ${{ home }}
