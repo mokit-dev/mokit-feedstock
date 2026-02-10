@@ -5,6 +5,7 @@ on:
     branches:
       - master
       - windows
+      - win-meson-debug
     paths:
       - "recipe/*"
       - ".github/workflows/windows.yml"

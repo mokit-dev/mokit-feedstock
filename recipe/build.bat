@@ -50,7 +50,7 @@ set F77=%FC%
 copy /Y "%RECIPE_DIR%\Makefile.gnu_openblas_conda.win" Makefile.gnu_openblas_conda.win
 powershell -Command "$content = Get-Content Makefile.main; $content = $content -replace '\$\(F90\) -shared \$\(FFLAGS\) \$\(MKL_FLAGS\) -o librest2fch\.so \$\(OBJ_py2fch\)', '\$(F90) -shared \$(FFLAGS) -o librest2fch.so \$(OBJ_py2fch) \$(MKL_FLAGS)'; $content = $content -replace 'librest2fch\.so', 'librest2fch.dll'; $content = $content -replace '\.so', '.pyd'; $content = $content -replace '@mv ', '@move '; Set-Content Makefile.main $content"
 
-make exe -f Makefile.gnu_openblas_conda.win
+make all -f Makefile.gnu_openblas_conda.win
 for /f "delims=" %%F in ('dir /s /b "%SRC_DIR%\src\f2pytmp\bbdir\meson-private\sanitycheckf.exe" 2^>NUL') do (
   echo --- %%F
   if not "x%OBJDUMP%"=="x" %OBJDUMP% -p "%%F" | findstr DLL
