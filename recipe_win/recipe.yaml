@@ -20,7 +20,7 @@ source:
     #branch: "master"
 
 build:
-  number: 101
+  number: 102
   # string: "py{{ PY_VER }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}"
   files:
     exclude:
