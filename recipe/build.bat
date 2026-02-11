@@ -32,8 +32,6 @@ dir /b "%BUILD_PREFIX%\Library\bin\libwinpthread-1.dll" 2>NUL
 dir /b "%BUILD_PREFIX%\Library\bin\libquadmath-0.dll" 2>NUL
 if not "x%OBJDUMP%"=="x" %OBJDUMP% -p "%BUILD_PREFIX%\Library\bin\libgfortran-5.dll" | findstr DLL
 %PYTHON% -c "import sys; print(sys.executable)"
-%PYTHON% -m numpy.f2py --help | findstr /I native-file
-%PYTHON% -m numpy.f2py -h >NUL 2>&1
 
 set "MESON_NATIVE_FILE=%TEMP%\meson-native.ini"
 (
@@ -41,7 +39,9 @@ set "MESON_NATIVE_FILE=%TEMP%\meson-native.ini"
   echo skip_sanity_check = true
 ) > "%MESON_NATIVE_FILE%"
 
-%PYTHON% "%RECIPE_DIR%\patch_numpy_f2py.py"
+python "%RECIPE_DIR%\patch_numpy_f2py.py"
+python -m numpy.f2py --help | findstr /I native-file
+python -m numpy.f2py -h >NUL 2>&1
 
 if exist "..\MANIFEST.in" (
   powershell -Command "$p='..\MANIFEST.in'; $c=Get-Content $p; if ($c -notmatch '\.pyd') { Add-Content $p 'recursive-include mokit *.pyd' }"
@@ -58,7 +58,7 @@ set F77=%FC%
 @REM ) > "%MESON_CROSS_FILE%"
 @REM set MESON_CROSS_FILE=%MESON_CROSS_FILE%
 copy /Y "%RECIPE_DIR%\Makefile.gnu_openblas_conda.win" Makefile.gnu_openblas_conda.win
-powershell -Command "$content = Get-Content Makefile.main; $content = $content -replace '\$\(F90\) -shared \$\(FFLAGS\) \$\(MKL_FLAGS\) -o librest2fch\.so \$\(OBJ_py2fch\)', '\$(F90) -shared \$(FFLAGS) -o librest2fch.so \$(OBJ_py2fch) \$(MKL_FLAGS)'; $content = $content -replace 'librest2fch\.so', 'librest2fch.dll'; $content = $content -replace '\.so', '.pyd'; $content = $content -replace '@mv ', '@move '; Set-Content Makefile.main $content"
+powershell -Command "$content = Get-Content Makefile.main; $content = $content -replace '\$\(F90\) -shared \$\(FFLAGS\) \$\(MKL_FLAGS\) -o librest2fch\.so \$\(OBJ_py2fch\)', '\$(F90) -shared \$(FFLAGS) -o librest2fch.so \$(OBJ_py2fch) \$(MKL_FLAGS)'; $content = $content -replace 'librest2fch\.so', 'librest2fch.dll'; $content = $content -replace '\.so', '.pyd'; Set-Content Makefile.main $content"
 
 make all -f Makefile.gnu_openblas_conda.win
 if errorlevel 1 exit /b %errorlevel%
