@@ -31,6 +31,8 @@ dir /b "%BUILD_PREFIX%\Library\bin\libgcc_s_seh-1.dll" 2>NUL
 dir /b "%BUILD_PREFIX%\Library\bin\libwinpthread-1.dll" 2>NUL
 dir /b "%BUILD_PREFIX%\Library\bin\libquadmath-0.dll" 2>NUL
 if not "x%OBJDUMP%"=="x" %OBJDUMP% -p "%BUILD_PREFIX%\Library\bin\libgfortran-5.dll" | findstr DLL
+%PYTHON% -c "import sys; print(sys.executable)"
+%PYTHON% -m numpy.f2py --help | findstr /I native-file
 %PYTHON% -m numpy.f2py -h >NUL 2>&1
 
 set "MESON_NATIVE_FILE=%TEMP%\meson-native.ini"
