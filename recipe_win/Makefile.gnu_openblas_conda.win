@@ -6,10 +6,10 @@ LIB = ../mokit/lib
 # --- gfortran + openblas ---
 FFLAGS += -O2 -cpp -fPIC -fopenmp -fno-tree-vectorize -fno-math-errno -D_WIN32
 BUILD_PREFIX_POSIX = $(shell cygpath -u "$(BUILD_PREFIX)")
-MKL_FLAGS = -L$(BUILD_PREFIX_POSIX)/Library/lib -lopenblas
+MKL_FLAGS = -L$(BUILD_PREFIX)/Library/lib -lopenblas
 SRC_DIR_POSIX = $(shell cygpath -u "$(SRC_DIR)")
 PWD_POSIX = $(shell cygpath -u "$(PWD)")
 F2PY = python -m numpy.f2py --backend=meson --verbose --native-file "$(MESON_NATIVE_FILE)"
-F2_FLAGS = --f90flags="-cpp -fopenmp -fno-tree-vectorize -fno-math-errno" -I$(SRC_DIR_POSIX)/src -I$(PWD_POSIX) -lgomp --build-dir f2pytmp
+F2_FLAGS = --f90flags="-cpp -fopenmp -fno-tree-vectorize -fno-math-errno" -I$(SRC_DIR_POSIX)/src -I$(PWD_POSIX) -lgomp -L$(BUILD_PREFIX_POSIX)/Library/lib -lopenblas --build-dir f2pytmp
 
 include Makefile.main
