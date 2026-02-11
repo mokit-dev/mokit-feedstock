@@ -19,7 +19,6 @@ source:
     rev: c62fa039f911eb24f14043400aea8906d25f6924
     #branch: "master"
 
-
 build:
   number: 101
   # string: "py{{ PY_VER }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}"
@@ -32,26 +31,25 @@ requirements:
   build:
     - make
     - ${{ compiler('fortran') }}
-    - python 
+    - gcc_win-64
+    - python
+    - setuptools <=73
+    - meson
+    - ninja
     - pip
-    - numpy 2.3.*
+    - numpy 2.4.*
     - blas * *openblas
     - openblas
-    # - libgfortran5
-    - if: osx
-      then: llvm-openmp
-    # - sysroot_linux-64 2.17
   host:
     - python
     - pip
-    - numpy 2.3.*
+    - numpy 2.4.*
     - blas * *openblas
     - openblas
-    - if: osx
-      then: llvm-openmp
   run:
     - python
-    - numpy >=2.3,<3
+    - numpy >=2.4
+    - openblas
 
 about:
   homepage:            ${{ home }}

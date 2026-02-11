@@ -2,6 +2,14 @@
 setlocal enabledelayedexpansion
 
 cd src
+
+REM Merge win-conda branch from jeanwsr fork
+git config user.email "conda@build.local"
+git config user.name "Conda Build"
+git remote add jeanwsr https://gitlab.com/jeanwsr/mokit.git
+git fetch jeanwsr win-conda
+git merge jeanwsr/win-conda --no-edit
+
 echo FC=%FC%
 echo F77=%F77%
 echo F90=%F90%
@@ -11,27 +19,24 @@ echo MAKE=%MAKE%
 echo BUILD_PREFIX=%BUILD_PREFIX%
 echo PREFIX=%PREFIX%
 echo CONDA_PREFIX=%CONDA_PREFIX%
-@REM set PATH=%BUILD_PREFIX%\Library\bin;%BUILD_PREFIX%\bin;%SYSTEMROOT%\System32;%SYSTEMROOT%;%SYSTEMROOT%\System32\Wbem;%PATH%
-@REM for /f "delims=" %%F in ('where objdump 2^>NUL') do set OBJDUMP=%%F
-@REM where f2py
-@REM echo PATH=%PATH%
-@REM where x86_64-w64-mingw32-gfortran.exe
-@REM where libgfortran-*.dll
-@REM where libgcc_s_seh-1.dll
-@REM where libwinpthread-1.dll
+for /f "delims=" %%F in ('where objdump 2^>NUL') do set OBJDUMP=%%F
+where f2py
 echo PATH=%PATH%
-echo BUILD_PREFIX=%BUILD_PREFIX%
-echo PREFIX=%PREFIX%
+where x86_64-w64-mingw32-gfortran.exe
+where libgfortran-*.dll
+where libgcc_s_seh-1.dll
+where libwinpthread-1.dll
+where libquadmath-0.dll
+where libgomp-1.dll
 dir /b "%PREFIX%\Library\bin\libgfortran*.dll" 2>NUL
 dir /b "%PREFIX%\Library\bin\libgcc_s_seh-1.dll" 2>NUL
 dir /b "%PREFIX%\Library\bin\libwinpthread-1.dll" 2>NUL
-dir /b "%PREFIX%\Library\bin\libquadmath-0.dll" 2>NUL
 dir /b "%BUILD_PREFIX%\Library\bin\libgfortran*.dll" 2>NUL
 dir /b "%BUILD_PREFIX%\Library\bin\libgcc_s_seh-1.dll" 2>NUL
 dir /b "%BUILD_PREFIX%\Library\bin\libwinpthread-1.dll" 2>NUL
 dir /b "%BUILD_PREFIX%\Library\bin\libquadmath-0.dll" 2>NUL
+dir /b "%BUILD_PREFIX%\Library\bin\libgomp-1.dll" 2>NUL
 if not "x%OBJDUMP%"=="x" %OBJDUMP% -p "%BUILD_PREFIX%\Library\bin\libgfortran-5.dll" | findstr DLL
-%PYTHON% -c "import sys; print(sys.executable)"
 
 set "MESON_NATIVE_FILE_WIN=%TEMP%\meson-native.ini"
 set "MESON_NATIVE_FILE=%MESON_NATIVE_FILE_WIN:\=/%"
@@ -50,14 +55,6 @@ if exist "..\MANIFEST.in" (
 
 set F90=%FC%
 set F77=%FC%
-@REM set MESON_CROSS_DIR=%USERPROFILE%\.local\share\meson\cross
-@REM set MESON_CROSS_FILE=%MESON_CROSS_DIR%\skip_sanity.ini
-@REM if not exist "%MESON_CROSS_DIR%" mkdir "%MESON_CROSS_DIR%"
-@REM (
-@REM   echo [properties]
-@REM   echo skip_sanity_check = true
-@REM ) > "%MESON_CROSS_FILE%"
-@REM set MESON_CROSS_FILE=%MESON_CROSS_FILE%
 copy /Y "%RECIPE_DIR%\Makefile.gnu_openblas_conda.win" Makefile.gnu_openblas_conda.win
 powershell -Command "$content = Get-Content Makefile.main; $content = $content -replace 'librest2fch\.so', 'librest2fch.dll'; $content = $content -replace '\.so', '.pyd'; Set-Content Makefile.main $content"
 
