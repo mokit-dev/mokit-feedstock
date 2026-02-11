@@ -33,6 +33,14 @@ dir /b "%BUILD_PREFIX%\Library\bin\libquadmath-0.dll" 2>NUL
 if not "x%OBJDUMP%"=="x" %OBJDUMP% -p "%BUILD_PREFIX%\Library\bin\libgfortran-5.dll" | findstr DLL
 %PYTHON% -m numpy.f2py -h >NUL 2>&1
 
+set "MESON_NATIVE_FILE=%TEMP%\meson-native.ini"
+(
+  echo [properties]
+  echo skip_sanity_check = true
+) > "%MESON_NATIVE_FILE%"
+
+%PYTHON% "%RECIPE_DIR%\patch_numpy_f2py.py"
+
 if exist "..\MANIFEST.in" (
   powershell -Command "$p='..\MANIFEST.in'; $c=Get-Content $p; if ($c -notmatch '\.pyd') { Add-Content $p 'recursive-include mokit *.pyd' }"
 )
@@ -51,6 +59,7 @@ copy /Y "%RECIPE_DIR%\Makefile.gnu_openblas_conda.win" Makefile.gnu_openblas_con
 powershell -Command "$content = Get-Content Makefile.main; $content = $content -replace '\$\(F90\) -shared \$\(FFLAGS\) \$\(MKL_FLAGS\) -o librest2fch\.so \$\(OBJ_py2fch\)', '\$(F90) -shared \$(FFLAGS) -o librest2fch.so \$(OBJ_py2fch) \$(MKL_FLAGS)'; $content = $content -replace 'librest2fch\.so', 'librest2fch.dll'; $content = $content -replace '\.so', '.pyd'; $content = $content -replace '@mv ', '@move '; Set-Content Makefile.main $content"
 
 make all -f Makefile.gnu_openblas_conda.win
+if errorlevel 1 exit /b %errorlevel%
 for /f "delims=" %%F in ('dir /s /b "%SRC_DIR%\src\f2pytmp\bbdir\meson-private\sanitycheckf.exe" 2^>NUL') do (
   echo --- %%F
   if not "x%OBJDUMP%"=="x" %OBJDUMP% -p "%%F" | findstr DLL

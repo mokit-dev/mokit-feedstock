@@ -1,0 +1,45 @@
+diff --git a/numpy/f2py/f2py2e.py b/numpy/f2py/f2py2e.py
+index 0000000..0000000 100644
+--- a/numpy/f2py/f2py2e.py
++++ b/numpy/f2py/f2py2e.py
+@@
+ def make_f2py_compile_parser():
+     parser = argparse.ArgumentParser(add_help=False)
+     parser.add_argument("--dep", action="append", dest="dependencies")
+     parser.add_argument("--backend", choices=['meson', 'distutils'], default='distutils')
++    parser.add_argument("--native-file", dest="native_file")
+     parser.add_argument("-m", dest="module_name")
+     return parser
+@@
+ def preparse_sysargv():
+@@
+     return {
+         "dependencies": args.dependencies or [],
+         "backend": backend_key,
+         "modulename": args.module_name,
++        "native_file": args.native_file,
+     }
+@@
+ def run_compile():
+@@
+     dependencies = argy["dependencies"]
++    native_file = argy["native_file"]
+     backend_key = argy["backend"]
+     build_backend = f2py_build_generator(backend_key)
+@@
+-        {"dependencies": dependencies},
++        {"dependencies": dependencies, "native_file": native_file},
+     )
+diff --git a/numpy/f2py/_backends/_meson.py b/numpy/f2py/_backends/_meson.py
+index 0000000..0000000 100644
+--- a/numpy/f2py/_backends/_meson.py
++++ b/numpy/f2py/_backends/_meson.py
+@@
+     def run_meson(self, build_dir: Path):
+         setup_command = ["meson", "setup", self.meson_build_dir]
++        native_file = self.extra_dat.get("native_file")
++        if native_file:
++            setup_command += ["--native-file", native_file]
+         self._run_subprocess_command(setup_command, build_dir)
+         compile_command = ["meson", "compile", "-C", self.meson_build_dir]
+         self._run_subprocess_command(compile_command, build_dir)
