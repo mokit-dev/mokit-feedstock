@@ -5,9 +5,9 @@ on:
     branches:
       - master
       - windows
-      - win-meson-debug
     paths:
-      - "recipe/*"
+      #- "recipe/*"
+      - "recipe_win/*"
       - ".github/workflows/windows.yml"
 
 jobs:
@@ -23,18 +23,18 @@ jobs:
         with:
           auto-update-conda: true
           activate-environment: mokit-env
-          environment-file: recipe/env.yaml
+          environment-file: recipe_win/env.yaml
           python-version: 3.11
       - name: Build the package
         run: |
           conda info
           conda activate mokit-env
-          $revLine = Get-Content "recipe/recipe.yaml" | Select-String -Pattern '^\s*rev:\s*' | Select-Object -First 1
-          if (-not $revLine) { throw "Could not find source rev in recipe/recipe.yaml" }
+          $revLine = Get-Content "recipe_win/recipe.yaml" | Select-String -Pattern '^\s*rev:\s*' | Select-Object -First 1
+          if (-not $revLine) { throw "Could not find source rev in recipe_win/recipe.yaml" }
           $rev = ($revLine -replace '^\s*rev:\s*', '').Trim()
-          if (-not $rev) { throw "Source rev is empty in recipe/recipe.yaml" }
+          if (-not $rev) { throw "Source rev is empty in recipe_win/recipe.yaml" }
           Invoke-WebRequest -Uri "https://gitlab.com/jxzou/mokit/-/raw/$rev/pyproject.toml" -OutFile pyproject.toml
-          rattler-build build --recipe recipe --output-dir output -c conda-forge --experimental
+          rattler-build build --recipe recipe_win --output-dir output -c conda-forge --experimental
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
