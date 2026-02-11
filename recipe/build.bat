@@ -33,11 +33,12 @@ dir /b "%BUILD_PREFIX%\Library\bin\libquadmath-0.dll" 2>NUL
 if not "x%OBJDUMP%"=="x" %OBJDUMP% -p "%BUILD_PREFIX%\Library\bin\libgfortran-5.dll" | findstr DLL
 %PYTHON% -c "import sys; print(sys.executable)"
 
-set "MESON_NATIVE_FILE=%TEMP%\meson-native.ini"
+set "MESON_NATIVE_FILE_WIN=%TEMP%\meson-native.ini"
+set "MESON_NATIVE_FILE=%MESON_NATIVE_FILE_WIN:\=/%"
 (
   echo [properties]
   echo skip_sanity_check = true
-) > "%MESON_NATIVE_FILE%"
+) > "%MESON_NATIVE_FILE_WIN%"
 
 python "%RECIPE_DIR%\patch_numpy_f2py.py"
 python -m numpy.f2py --help | findstr /I native-file
