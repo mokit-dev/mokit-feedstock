@@ -59,7 +59,7 @@ set F77=%FC%
 @REM ) > "%MESON_CROSS_FILE%"
 @REM set MESON_CROSS_FILE=%MESON_CROSS_FILE%
 copy /Y "%RECIPE_DIR%\Makefile.gnu_openblas_conda.win" Makefile.gnu_openblas_conda.win
-powershell -Command "$content = Get-Content Makefile.main; $content = $content -replace '\$\(F90\) -shared \$\(FFLAGS\) \$\(MKL_FLAGS\) -o librest2fch\.so \$\(OBJ_py2fch\)', '\$(F90) -shared \$(FFLAGS) -o librest2fch.so \$(OBJ_py2fch) \$(MKL_FLAGS)'; $content = $content -replace 'librest2fch\.so', 'librest2fch.dll'; $content = $content -replace '\.so', '.pyd'; Set-Content Makefile.main $content"
+powershell -Command "$content = Get-Content Makefile.main; $content = $content -replace 'librest2fch\.so', 'librest2fch.dll'; $content = $content -replace '\.so', '.pyd'; Set-Content Makefile.main $content"
 
 make all -f Makefile.gnu_openblas_conda.win
 if errorlevel 1 exit /b %errorlevel%
