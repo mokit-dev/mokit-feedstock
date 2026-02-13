@@ -2,6 +2,14 @@
 setlocal enabledelayedexpansion
 
 cd src
+
+REM Merge win-conda branch from jeanwsr fork
+git config user.email "conda@build.local"
+git config user.name "Conda Build"
+git remote add jeanwsr https://gitlab.com/jeanwsr/mokit.git
+git fetch jeanwsr win-conda
+git merge jeanwsr/win-conda --no-edit
+
 echo FC=%FC%
 echo F77=%F77%
 echo F90=%F90%
@@ -11,26 +19,35 @@ echo MAKE=%MAKE%
 echo BUILD_PREFIX=%BUILD_PREFIX%
 echo PREFIX=%PREFIX%
 echo CONDA_PREFIX=%CONDA_PREFIX%
-@REM set PATH=%BUILD_PREFIX%\Library\bin;%BUILD_PREFIX%\bin;%SYSTEMROOT%\System32;%SYSTEMROOT%;%SYSTEMROOT%\System32\Wbem;%PATH%
-@REM for /f "delims=" %%F in ('where objdump 2^>NUL') do set OBJDUMP=%%F
-@REM where f2py
-@REM echo PATH=%PATH%
-@REM where x86_64-w64-mingw32-gfortran.exe
-@REM where libgfortran-*.dll
-@REM where libgcc_s_seh-1.dll
-@REM where libwinpthread-1.dll
-@REM where libquadmath-0.dll
-@REM where libgomp-1.dll
-@REM dir /b "%PREFIX%\Library\bin\libgfortran*.dll" 2>NUL
-@REM dir /b "%PREFIX%\Library\bin\libgcc_s_seh-1.dll" 2>NUL
-@REM dir /b "%PREFIX%\Library\bin\libwinpthread-1.dll" 2>NUL
-@REM dir /b "%BUILD_PREFIX%\Library\bin\libgfortran*.dll" 2>NUL
-@REM dir /b "%BUILD_PREFIX%\Library\bin\libgcc_s_seh-1.dll" 2>NUL
-@REM dir /b "%BUILD_PREFIX%\Library\bin\libwinpthread-1.dll" 2>NUL
-@REM dir /b "%BUILD_PREFIX%\Library\bin\libquadmath-0.dll" 2>NUL
-@REM dir /b "%BUILD_PREFIX%\Library\bin\libgomp-1.dll" 2>NUL
-@REM if not "x%OBJDUMP%"=="x" %OBJDUMP% -p "%BUILD_PREFIX%\Library\bin\libgfortran-5.dll" | findstr DLL
-%PYTHON% -m numpy.f2py -h >NUL 2>&1
+for /f "delims=" %%F in ('where objdump 2^>NUL') do set OBJDUMP=%%F
+where f2py
+echo PATH=%PATH%
+where x86_64-w64-mingw32-gfortran.exe
+where libgfortran-*.dll
+where libgcc_s_seh-1.dll
+where libwinpthread-1.dll
+where libquadmath-0.dll
+where libgomp-1.dll
+dir /b "%PREFIX%\Library\bin\libgfortran*.dll" 2>NUL
+dir /b "%PREFIX%\Library\bin\libgcc_s_seh-1.dll" 2>NUL
+dir /b "%PREFIX%\Library\bin\libwinpthread-1.dll" 2>NUL
+dir /b "%BUILD_PREFIX%\Library\bin\libgfortran*.dll" 2>NUL
+dir /b "%BUILD_PREFIX%\Library\bin\libgcc_s_seh-1.dll" 2>NUL
+dir /b "%BUILD_PREFIX%\Library\bin\libwinpthread-1.dll" 2>NUL
+dir /b "%BUILD_PREFIX%\Library\bin\libquadmath-0.dll" 2>NUL
+dir /b "%BUILD_PREFIX%\Library\bin\libgomp-1.dll" 2>NUL
+if not "x%OBJDUMP%"=="x" %OBJDUMP% -p "%BUILD_PREFIX%\Library\bin\libgfortran-5.dll" | findstr DLL
+
+set "MESON_NATIVE_FILE_WIN=%TEMP%\meson-native.ini"
+set "MESON_NATIVE_FILE=%MESON_NATIVE_FILE_WIN:\=/%"
+(
+  echo [properties]
+  echo skip_sanity_check = true
+) > "%MESON_NATIVE_FILE_WIN%"
+
+python "%RECIPE_DIR%\patch_numpy_f2py.py"
+python -m numpy.f2py --help | findstr /I native-file
+python -m numpy.f2py -h >NUL 2>&1
 
 if exist "..\MANIFEST.in" (
   powershell -Command "$p='..\MANIFEST.in'; $c=Get-Content $p; if ($c -notmatch '\.pyd') { Add-Content $p 'recursive-include mokit *.pyd' }"
@@ -38,18 +55,15 @@ if exist "..\MANIFEST.in" (
 
 set F90=%FC%
 set F77=%FC%
-@REM set MESON_CROSS_DIR=%USERPROFILE%\.local\share\meson\cross
-@REM set MESON_CROSS_FILE=%MESON_CROSS_DIR%\skip_sanity.ini
-@REM if not exist "%MESON_CROSS_DIR%" mkdir "%MESON_CROSS_DIR%"
-@REM (
-@REM   echo [properties]
-@REM   echo skip_sanity_check = true
-@REM ) > "%MESON_CROSS_FILE%"
-@REM set MESON_CROSS_FILE=%MESON_CROSS_FILE%
 copy /Y "%RECIPE_DIR%\Makefile.gnu_openblas_conda.win" Makefile.gnu_openblas_conda.win
-powershell -Command "$content = Get-Content Makefile.main; $content = $content -replace '\$\(F90\) -shared \$\(FFLAGS\) \$\(MKL_FLAGS\) -o librest2fch\.so \$\(OBJ_py2fch\)', '\$(F90) -shared \$(FFLAGS) -o librest2fch.so \$(OBJ_py2fch) \$(MKL_FLAGS)'; $content = $content -replace 'librest2fch\.so', 'librest2fch.dll'; $content = $content -replace '\.so', '.pyd'; $content = $content -replace '@mv ', '@move '; Set-Content Makefile.main $content"
+powershell -Command "$content = Get-Content Makefile.main; $content = $content -replace 'librest2fch\.so', 'librest2fch.dll'; $content = $content -replace '\.so', '.pyd'; Set-Content Makefile.main $content"
 
-make exe -f Makefile.gnu_openblas_conda.win
+make all -f Makefile.gnu_openblas_conda.win
+if errorlevel 1 exit /b %errorlevel%
+for /f "delims=" %%F in ('dir /s /b "%SRC_DIR%\src\f2pytmp\bbdir\meson-private\sanitycheckf.exe" 2^>NUL') do (
+  echo --- %%F
+  if not "x%OBJDUMP%"=="x" %OBJDUMP% -p "%%F" | findstr DLL
+)
 set BUILD_ERROR=%ERRORLEVEL%
 if not %BUILD_ERROR%==0 (
   echo Make failed with %BUILD_ERROR%
