@@ -3,12 +3,6 @@ setlocal enabledelayedexpansion
 
 cd src
 
-REM Merge win-conda branch from jeanwsr fork
-git config user.email "conda@build.local"
-git config user.name "Conda Build"
-git remote add jeanwsr https://gitlab.com/jeanwsr/mokit.git
-git fetch jeanwsr win-conda
-git merge jeanwsr/win-conda --no-edit
 
 echo FC=%FC%
 echo F77=%F77%
