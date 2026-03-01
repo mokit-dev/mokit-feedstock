@@ -30,8 +30,9 @@ build:
 requirements:
   build:
     - make
-    - ${{ compiler('fortran') }}
-    - gcc_win-64
+    #- ${{ compiler('fortran') }}
+    - gfortran
+    - gcc
     - python
     - setuptools <=73
     - meson
