@@ -33,15 +33,9 @@ EOF
 
 # Ensure MANIFEST.in includes pyd files
 if [[ -f "../MANIFEST.in" ]]; then
-  python - <<'PY'
-from pathlib import Path
-
-p = Path('..') / 'MANIFEST.in'
-txt = p.read_text(encoding='utf-8')
-line = 'recursive-include mokit *.pyd\n'
-if '.pyd' not in txt:
-    p.write_text(txt + ('' if txt.endswith('\n') or txt == '' else '\n') + line, encoding='utf-8')
-PY
+  if ! grep -qE '^[[:space:]]*recursive-include[[:space:]]+mokit[[:space:]]+\*\.pyd([[:space:]]|$)' "../MANIFEST.in"; then
+    printf '\nrecursive-include mokit *.pyd\n' >>"../MANIFEST.in"
+  fi
 fi
 
 export F90="${FC:-${F90:-}}"
@@ -50,15 +44,10 @@ export F77="${FC:-${F77:-}}"
 cp -f "${RECIPE_DIR}/Makefile.gnu_openblas_conda.win" Makefile.gnu_openblas_conda.win
 
 # Patch Makefile.main: build Windows outputs
-python - <<'PY'
-from pathlib import Path
-
-p = Path('Makefile.main')
-txt = p.read_text(encoding='utf-8')
-txt = txt.replace('librest2fch.so', 'librest2fch.dll')
-txt = txt.replace('.so', '.pyd')
-p.write_text(txt, encoding='utf-8')
-PY
+sed -i.bak \
+  -e 's/librest2fch\.so/librest2fch.dll/g' \
+  -e 's/\.so/\.pyd/g' \
+  Makefile.main
 
 make all -f Makefile.gnu_openblas_conda.win
 
