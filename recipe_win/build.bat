@@ -41,9 +41,9 @@ set "MESON_NATIVE_FILE=%MESON_NATIVE_FILE_WIN:\=/%"
   echo skip_sanity_check = true
 ) > "%MESON_NATIVE_FILE_WIN%"
 
-python "%RECIPE_DIR%\patch_numpy_f2py.py"
-python -m numpy.f2py --help | findstr /I native-file
-python -m numpy.f2py -h >NUL 2>&1
+@REM python "%RECIPE_DIR%\patch_numpy_f2py.py"
+@REM python -m numpy.f2py --help | findstr /I native-file
+@REM python -m numpy.f2py -h >NUL 2>&1
 
 if exist "..\MANIFEST.in" (
   powershell -Command "$p='..\MANIFEST.in'; $c=Get-Content $p; if ($c -notmatch '\.pyd') { Add-Content $p 'recursive-include mokit *.pyd' }"
