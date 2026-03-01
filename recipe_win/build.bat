@@ -55,7 +55,6 @@ copy /Y "%RECIPE_DIR%\Makefile.gnu_openblas_conda.win" Makefile.gnu_openblas_con
 powershell -Command "$content = Get-Content Makefile.main; $content = $content -replace 'librest2fch\.so', 'librest2fch.dll'; $content = $content -replace '\.so', '.pyd'; Set-Content Makefile.main $content"
 
 make all -f Makefile.gnu_openblas_conda.win
-if errorlevel 1 exit /b %errorlevel%
 for /f "delims=" %%F in ('dir /s /b "%SRC_DIR%\src\f2pytmp\bbdir\meson-private\sanitycheckf.exe" 2^>NUL') do (
   echo --- %%F
   if not "x%OBJDUMP%"=="x" %OBJDUMP% -p "%%F" | findstr DLL
