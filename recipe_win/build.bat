@@ -16,6 +16,7 @@ echo CONDA_PREFIX=%CONDA_PREFIX%
 for /f "delims=" %%F in ('where objdump 2^>NUL') do set OBJDUMP=%%F
 where f2py
 where x86_64-w64-mingw32-gfortran.exe
+where gfortran
 where libgfortran-*.dll
 where libgcc_s_seh-1.dll
 where libwinpthread-1.dll
