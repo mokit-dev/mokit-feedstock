@@ -17,7 +17,7 @@ jobs:
     runs-on: windows-latest
     defaults:
       run:
-        shell: powershell
+        shell: bash -el {0}
     steps:
       - uses: actions/checkout@v2
       - name: Set up Miniconda
@@ -29,13 +29,23 @@ jobs:
           python-version: 3.11
       - name: Build the package
         run: |
+          set -euo pipefail
           conda info
+          #source "${CONDA}/etc/profile.d/conda.sh"
           conda activate mokit-env
-          $revLine = Get-Content "recipe_win/recipe.yaml" | Select-String -Pattern '^\s*rev:\s*' | Select-Object -First 1
-          if (-not $revLine) { throw "Could not find source rev in recipe_win/recipe.yaml" }
-          $rev = ($revLine -replace '^\s*rev:\s*', '').Trim()
-          if (-not $rev) { throw "Source rev is empty in recipe_win/recipe.yaml" }
-          Invoke-WebRequest -Uri "https://gitlab.com/jxzou/mokit/-/raw/$rev/pyproject.toml" -OutFile pyproject.toml
+          rev="$(
+            python - <<'PY'
+            import re
+            from pathlib import Path
+
+            p = Path('recipe_win/recipe.yaml')
+            m = re.search(r'^\s*rev:\s*(\S+)\s*$', p.read_text(encoding='utf-8'), flags=re.M)
+            if not m:
+                raise SystemExit('Could not find source rev in recipe_win/recipe.yaml')
+            print(m.group(1))
+            PY
+          )"
+          curl -fsSL "https://gitlab.com/jxzou/mokit/-/raw/${rev}/pyproject.toml" -o pyproject.toml
           rattler-build build --recipe recipe_win --output-dir output -c conda-forge --experimental
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -46,6 +56,15 @@ jobs:
         env:
           ANACONDA_API_KEY: ${{ secrets.ANACONDA }}
         run: |
-          $packages = Get-ChildItem -Path output -Filter *.conda -Recurse
-          if (-not $packages) { throw "No .conda packages found under output/" }
-          $packages | ForEach-Object { rattler-build upload anaconda -o mokit $_.FullName }
+          set -euo pipefail
+          #source "${CONDA}/etc/profile.d/conda.sh"
+          conda activate mokit-env
+          shopt -s globstar nullglob
+          packages=(output/**/*.conda)
+          if (( ${#packages[@]} == 0 )); then
+            echo "No .conda packages found under output/" >&2
+            exit 1
+          fi
+          for pkg in "${packages[@]}"; do
+            rattler-build upload anaconda -o mokit "$pkg"
+          done

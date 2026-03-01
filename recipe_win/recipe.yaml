@@ -22,6 +22,8 @@ source:
 build:
   number: 102
   # string: "py{{ PY_VER }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}"
+  script:
+    - bash recipe_win/build.sh
   files:
     exclude:
       - "**/__pycache__"
