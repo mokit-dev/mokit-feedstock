@@ -23,7 +23,9 @@ build:
   number: 102
   # string: "py{{ PY_VER }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}"
   script:
-    - bash ${RECIPE_DIR}/build.sh
+    # On Windows the default shell for recipe scripts is cmd.exe,
+    # so use %%RECIPE_DIR%% for variable expansion.
+    - bash "%RECIPE_DIR%\\build.sh"
   files:
     exclude:
       - "**/__pycache__"
