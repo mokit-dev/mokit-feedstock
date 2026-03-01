@@ -59,6 +59,8 @@ for /f "delims=" %%F in ('dir /s /b "%SRC_DIR%\src\f2pytmp\bbdir\meson-private\s
   echo --- %%F
   if not "x%OBJDUMP%"=="x" %OBJDUMP% -p "%%F" | findstr DLL
 )
+"%SRC_DIR%\src\f2pytmp\bbdir\meson-private\sanitycheckf.exe"
+if errorlevel 1 exit /b %errorlevel%
 set BUILD_ERROR=%ERRORLEVEL%
 if not %BUILD_ERROR%==0 (
   echo Make failed with %BUILD_ERROR%
