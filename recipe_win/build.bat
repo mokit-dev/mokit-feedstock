@@ -15,7 +15,6 @@ echo PREFIX=%PREFIX%
 echo CONDA_PREFIX=%CONDA_PREFIX%
 for /f "delims=" %%F in ('where objdump 2^>NUL') do set OBJDUMP=%%F
 where f2py
-echo PATH=%PATH%
 where x86_64-w64-mingw32-gfortran.exe
 where libgfortran-*.dll
 where libgcc_s_seh-1.dll
@@ -31,6 +30,9 @@ dir /b "%BUILD_PREFIX%\Library\bin\libwinpthread-1.dll" 2>NUL
 dir /b "%BUILD_PREFIX%\Library\bin\libquadmath-0.dll" 2>NUL
 dir /b "%BUILD_PREFIX%\Library\bin\libgomp-1.dll" 2>NUL
 if not "x%OBJDUMP%"=="x" %OBJDUMP% -p "%BUILD_PREFIX%\Library\bin\libgfortran-5.dll" | findstr DLL
+
+echo PATH=%PATH%
+%F90% -print-search-dirs
 
 set "MESON_NATIVE_FILE_WIN=%TEMP%\meson-native.ini"
 set "MESON_NATIVE_FILE=%MESON_NATIVE_FILE_WIN:\=/%"
