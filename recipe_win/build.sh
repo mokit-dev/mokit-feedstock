@@ -22,21 +22,21 @@ command -v x86_64-w64-mingw32-gfortran.exe || true
 command -v gfortran || true
 command -v objdump || true
 
-MESON_NATIVE_FILE_WIN="${TEMP:-/tmp}/meson-native.ini"
-MESON_NATIVE_FILE="${MESON_NATIVE_FILE_WIN//\\//}"
-export MESON_NATIVE_FILE
+# MESON_NATIVE_FILE_WIN="${TEMP:-/tmp}/meson-native.ini"
+# MESON_NATIVE_FILE="${MESON_NATIVE_FILE_WIN//\\//}"
+# export MESON_NATIVE_FILE
 
-cat >"$MESON_NATIVE_FILE_WIN" <<'EOF'
-[properties]
-skip_sanity_check = true
-EOF
+# cat >"$MESON_NATIVE_FILE_WIN" <<'EOF'
+# [properties]
+# skip_sanity_check = true
+# EOF
 
 # Ensure MANIFEST.in includes pyd files
-if [[ -f "../MANIFEST.in" ]]; then
-  if ! grep -qE '^[[:space:]]*recursive-include[[:space:]]+mokit[[:space:]]+\*\.pyd([[:space:]]|$)' "../MANIFEST.in"; then
-    printf '\nrecursive-include mokit *.pyd\n' >>"../MANIFEST.in"
-  fi
-fi
+# if [[ -f "../MANIFEST.in" ]]; then
+#   if ! grep -qE '^[[:space:]]*recursive-include[[:space:]]+mokit[[:space:]]+\*\.pyd([[:space:]]|$)' "../MANIFEST.in"; then
+#     printf '\nrecursive-include mokit *.pyd\n' >>"../MANIFEST.in"
+#   fi
+# fi
 
 export F90="${FC:-${F90:-}}"
 export F77="${FC:-${F77:-}}"
