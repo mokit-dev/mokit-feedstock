@@ -16,12 +16,12 @@ package:
 
 source:
   - git: https://gitlab.com/jxzou/mokit
-    rev: c62fa039f911eb24f14043400aea8906d25f6924
+    rev: b41004215470cfd8b85d6e2289817e95a1a88b3b
     #branch: "master"
 
 
 build:
-  number: 1
+  number: 2
   # string: "py{{ PY_VER }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}"
   files:
     exclude:
@@ -32,7 +32,7 @@ requirements:
   build:
     - make
     - ${{ compiler('fortran') }}
-    #- ${{ compiler('c') }}
+    - ${{ compiler('c') }}
     - python 
     #- pip
     - numpy 
