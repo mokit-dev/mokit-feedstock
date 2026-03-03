@@ -20,7 +20,7 @@ source:
     #branch: "master"
 
 build:
-  number: 4
+  number: 5
   # string: "py{{ PY_VER }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}"
   script:
     # On Windows the default shell for recipe scripts is cmd.exe,
@@ -59,6 +59,7 @@ requirements:
   run:
     - python
     - numpy >=2.4
+    - blas * *openblas
     - openblas
 
 about:
