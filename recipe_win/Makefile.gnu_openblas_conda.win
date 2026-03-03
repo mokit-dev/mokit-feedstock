@@ -4,9 +4,6 @@ BIN = ../bin
 LIB = ../mokit/lib
 
 # --- gfortran + openblas ---
-FC = gfortran
-F90 = gfortran
-CC = gcc
 FFLAGS += -O2 -cpp -fPIC -fopenmp -fno-tree-vectorize -fno-math-errno -D_WIN32
 BUILD_PREFIX_POSIX = $(shell cygpath -u "$(BUILD_PREFIX)")
 MKL_FLAGS = -L$(BUILD_PREFIX)/Library/lib -lopenblas

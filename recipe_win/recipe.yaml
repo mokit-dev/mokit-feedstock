@@ -20,7 +20,7 @@ source:
     #branch: "master"
 
 build:
-  number: 3
+  number: 5
   # string: "py{{ PY_VER }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}"
   script:
     # On Windows the default shell for recipe scripts is cmd.exe,
@@ -30,6 +30,11 @@ build:
     exclude:
       - "**/__pycache__"
       - "**/*.pyc"
+  python:
+    entry_points:
+      - uno = mokit.lib.cli:uno_cli
+      - permute_orb = mokit.lib.cli:permute_orb_cli
+
 
 requirements:
   build:
@@ -54,6 +59,7 @@ requirements:
   run:
     - python
     - numpy >=2.4
+    - blas * *openblas
     - openblas
 
 about:

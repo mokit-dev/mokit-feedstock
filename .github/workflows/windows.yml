@@ -7,6 +7,7 @@ on:
       - windows
       - win-meson-debug
       - win-meson-nopatch
+      - win-entrypo
     paths:
       #- "recipe/*"
       - "recipe_win/*"
