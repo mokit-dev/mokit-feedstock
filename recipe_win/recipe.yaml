@@ -20,7 +20,7 @@ source:
     #branch: "master"
 
 build:
-  number: 2
+  number: 3
   # string: "py{{ PY_VER }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}"
   script:
     # On Windows the default shell for recipe scripts is cmd.exe,
@@ -35,8 +35,8 @@ requirements:
   build:
     - make
     #- ${{ compiler('fortran') }}
-    - gfortran
-    - gcc
+    - gfortran_win-64
+    - gcc_win-64
     - python
     - setuptools <=73
     - meson
