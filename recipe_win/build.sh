@@ -16,6 +16,9 @@ echo "BUILD_PREFIX=${BUILD_PREFIX:-}"
 echo "PREFIX=${PREFIX:-}"
 echo "CONDA_PREFIX=${CONDA_PREFIX:-}"
 echo "PATH=${PATH}"
+export F90="${FC:-${F90:-}}"
+# export F77="${FC:-${F77:-}}"
+echo "F90=${F90:-}"
 
 command -v f2py || true
 command -v x86_64-w64-mingw32-gfortran.exe || true
@@ -38,8 +41,6 @@ command -v objdump || true
 #   fi
 # fi
 
-export F90="${FC:-${F90:-}}"
-export F77="${FC:-${F77:-}}"
 
 cp -f "${RECIPE_DIR}/Makefile.gnu_openblas_conda.win" Makefile.gnu_openblas_conda.win
 
@@ -53,7 +54,7 @@ make all -f Makefile.gnu_openblas_conda.win
 
 cd ..
 
-"${PYTHON}" -m pip install -v --prefix="${PREFIX}" .
+pip install -v --prefix="${PREFIX}" .
 
 if [[ -d bin ]]; then
   mkdir -p "${PREFIX}/bin"
