@@ -16,11 +16,11 @@ package:
 
 source:
   - git: https://gitlab.com/jxzou/mokit
-    rev: b41004215470cfd8b85d6e2289817e95a1a88b3b
+    rev: 0ce4a633bc870b33487ad418e9ddac4cbc5adebb
     #branch: "master"
 
 build:
-  number: 5
+  number: 2
   # string: "py{{ PY_VER }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}"
   script:
     # On Windows the default shell for recipe scripts is cmd.exe,
@@ -34,6 +34,7 @@ build:
     entry_points:
       - uno = mokit.lib.cli:uno_cli
       - permute_orb = mokit.lib.cli:permute_orb_cli
+      - pchk2fch = mokit.lib.cli:pchk2fch_cli
 
 
 requirements:
