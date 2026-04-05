@@ -21,7 +21,7 @@ source:
 
 
 build:
-  number: 2
+  number: 3
   # string: "py{{ PY_VER }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}"
   files:
     exclude:
