@@ -34,7 +34,7 @@ requirements:
     - ${{ compiler('fortran') }}
     - ${{ compiler('c') }}
     - python 
-    #- pip
+    - pip
     - numpy 
     #- blas * *openblas
     - openblas
