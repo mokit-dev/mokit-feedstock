@@ -35,6 +35,7 @@ requirements:
     - ${{ compiler('c') }}
     - python 
     - pip
+    - setuptools < 81
     - numpy 
     #- blas * *openblas
     - openblas
