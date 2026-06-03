@@ -16,11 +16,11 @@ package:
 
 source:
   - git: https://gitlab.com/jxzou/mokit
-    rev: 4b52e3ee91d71a40ab1035e46a9bd1d2a389cd44
+    rev: 6f262fd8a006e99462e1bcec96c65f405bc08268
     #branch: "master"
 
 build:
-  number: 1
+  number: 2
   # string: "py{{ PY_VER }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}"
   script:
     # On Windows the default shell for recipe scripts is cmd.exe,
