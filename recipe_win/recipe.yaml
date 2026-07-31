@@ -16,7 +16,7 @@ package:
 
 source:
   - git: https://gitlab.com/jxzou/mokit
-    rev: a64cf0ae12806c5ac3176904c9e0371227a34005
+    rev: 13645a516376ec68af817ba6ff8018aff1ceccaa
     #branch: "master"
 
 build:
