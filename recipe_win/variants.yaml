@@ -4,7 +4,7 @@ python:
 numpy:
   - 2.4
 openblas:
-  - 0.3.30
+  - 0.3.33
 m2w64_c_compiler:
   - gcc
 m2w64_c_compiler_version:

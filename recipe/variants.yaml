@@ -4,6 +4,6 @@ python:
 numpy:
   - 2.3
 openblas:
-  - 0.3.30
+  - 0.3.33
 c_stdlib_version:
   - 11.0 # osx arm64

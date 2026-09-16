@@ -21,7 +21,7 @@ source:
 
 
 build:
-  number: 1
+  number: 2
   # string: "py{{ PY_VER }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}"
   files:
     exclude:
@@ -38,7 +38,7 @@ requirements:
     - setuptools < 81
     - numpy 
     #- blas * *openblas
-    - openblas
+    - openblas <0.3.34
     # - libgfortran5
     - if: osx
       then: llvm-openmp
@@ -48,12 +48,13 @@ requirements:
     #- pip
     - numpy 
     #- blas * *openblas
-    - openblas
+    - openblas <0.3.34
     - if: osx
       then: llvm-openmp
   run:
     - python
-    - numpy 
+    - numpy
+    - openblas <0.3.34
 
 about:
   homepage:            ${{ home }}
