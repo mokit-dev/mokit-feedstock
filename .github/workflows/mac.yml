@@ -6,10 +6,11 @@ on:
       - master
     paths:
       - "recipe/*"
+      - ".github/workflows/mac.yml"
 
 jobs:
   build-osx-arm64:
-    runs-on: macos-14
+    runs-on: macos-15
     defaults:
       run:
         shell: sh -l {0}
